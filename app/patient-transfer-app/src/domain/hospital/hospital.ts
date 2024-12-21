@@ -58,3 +58,14 @@ export interface Patient extends Person {
 export interface Cpf {
   readonly value: string;
 }
+
+export function createEmptyHospital (): Hospital {
+  return {
+    id: "",
+    name: "None",
+    location: [0, 0],
+    rooms: [],
+    doctors: [],
+    regulatorId: ""
+  };
+}

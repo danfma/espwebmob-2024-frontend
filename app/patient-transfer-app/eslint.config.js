@@ -1,8 +1,9 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
 import pluginReact from "eslint-plugin-react";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import globals from "globals";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -17,6 +18,9 @@ export default [
     }
   },
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort
+    },
     rules: {
       "@stylistic/indent": [
         "error",
@@ -31,7 +35,17 @@ export default [
         "error",
         "as-needed"
       ],
-      "react/react-in-jsx-scope": "off"
+      "@stylistic/function-call-argument-newline": [
+        "error",
+        "consistent"
+      ],
+      "@stylistic/array-element-newline": [
+        "error",
+        "consistent"
+      ],
+      "react/react-in-jsx-scope": "off",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error"
     }
   }
 ];
