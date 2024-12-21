@@ -3,11 +3,11 @@ import {HospitalId, PersonId} from "../hospital";
 export type Token = string;
 
 export interface Guest {
-  readonly kind: "guest";
+  readonly kind: "Guest";
 }
 
 export interface AuthenticatedUser {
-  readonly kind: "user";
+  readonly kind: "User";
   readonly personId: PersonId;
   readonly hospitalId: HospitalId;
   readonly accessToken: Token;
@@ -16,6 +16,6 @@ export interface AuthenticatedUser {
 export type User = Guest | AuthenticatedUser;
 
 export function createGuestUser (): Guest {
-  return {kind: "guest"};
+  return {kind: "Guest"};
 }
 

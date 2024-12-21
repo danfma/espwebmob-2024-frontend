@@ -1,7 +1,7 @@
 import "./index.css";
 
-import {createClientOnlyAuthService} from "@app/domain/auth";
-import {createClientOnlyHospitalService} from "@app/domain/hospital";
+import {createAuthService} from "@app/domain/auth";
+import {createHospitalService} from "@app/domain/hospital";
 import {createHospitalOverviewStore, createUserStore} from "@app/stores";
 import {App} from "@app/views/app.tsx";
 import {DomainServicesProvider, HospitalOverviewProvider, UserStoreProvider} from "@app/views/contexts";
@@ -12,8 +12,8 @@ import {BrowserRouter} from "react-router";
 
 // Create domain services
 const domainServices = {
-  authService: createClientOnlyAuthService(),
-  hospitalService: createClientOnlyHospitalService()
+  authService: createAuthService(),
+  hospitalService: createHospitalService()
 };
 
 const userStore = createUserStore();

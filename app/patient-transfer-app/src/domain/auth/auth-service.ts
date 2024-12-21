@@ -10,7 +10,7 @@ export function createClientOnlyAuthService (): AuthService {
     async authorize (username: string, password: string) {
       if (username === "doctor-a" && password === "password") {
         return {
-          kind: "user",
+          kind: "User",
           personId: "doctor-a",
           hospitalId: "hospital-a",
           accessToken: "my-token"
@@ -18,7 +18,39 @@ export function createClientOnlyAuthService (): AuthService {
       }
 
       return {
-        kind: "guest"
+        kind: "Guest"
+      };
+    }
+  };
+}
+
+export function createAuthService (url: string = "/api/auth"): AuthService {
+  // TODO Replace with auto-generated code
+  return {
+    async authorize (username: string, password: string) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
+      });
+
+      // TODO not the best way to check for unauthorized
+      if (response.status !== 200) {
+        return {
+          kind: "Guest"
+        };
+      }
+
+      const data = await response.json();
+
+      return {
+        ...data,
+        kind: "User"
       };
     }
   };

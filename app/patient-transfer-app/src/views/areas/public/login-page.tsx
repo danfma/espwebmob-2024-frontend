@@ -26,7 +26,7 @@ export function LoginPage () {
 
 function getHomePageUrl (user: User) {
   switch (user.kind) {
-    case "user":
+    case "User":
       return "/doctor";
 
     default:

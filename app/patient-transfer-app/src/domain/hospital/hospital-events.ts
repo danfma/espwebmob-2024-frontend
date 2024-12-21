@@ -1,5 +1,4 @@
 import {DoctorId, Hospital, Patient, RoomId} from "./hospital.ts";
-
 export interface RegulatorChanged {
   readonly kind: "RegulatorChanged";
   readonly regulatorId: DoctorId;
@@ -13,6 +12,7 @@ export interface PatientAllocated {
 }
 
 export type HospitalEvent = RegulatorChanged | PatientAllocated;
+
 
 export function applyEvent (hospital: Hospital, event: HospitalEvent) {
   switch (event.kind) {

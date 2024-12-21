@@ -23,7 +23,7 @@ export function createLoginStore (
   const login = async () => {
     const user = await authService.authorize(username.value, password.value);
 
-    if (!(user && user.kind === "user")) {
+    if (!(user && user.kind === "User")) {
       // TODO Show an error message
       return;
     }

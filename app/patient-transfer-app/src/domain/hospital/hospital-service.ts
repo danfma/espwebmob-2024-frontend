@@ -1,3 +1,4 @@
+import {HubConnectionBuilder} from "@microsoft/signalr";
 import {Observable, Subject} from "rxjs";
 
 import {Doctor, Hospital, HospitalId} from "./hospital.ts";
@@ -66,6 +67,56 @@ export function createClientOnlyHospitalService (): HospitalService {
 
     listen (_: HospitalId) {
       return new Subject<HospitalEvent>();
+    }
+  };
+}
+
+export function createHospitalService (url: string = "/api/hospital") {
+  let cachedToken: string | null = null;
+
+  return {
+    setAuthorizationToken (token: string) {
+      cachedToken = token;
+    },
+
+    async load (id: HospitalId) {
+      const response = await fetch(`${url}/${id}`, {
+        method: "GET",
+        headers: cachedToken
+          ? {
+            Authorization: `Bearer ${cachedToken}`
+          }
+          : {}
+      });
+
+      if (response.status !== 200) {
+        throw new Error("Failed to load hospital");
+      }
+
+      return response.json();
+    },
+
+    listen (id: HospitalId) {
+      const hub = new HubConnectionBuilder().
+        withUrl(`/api/hubs/hospital/${id}`).
+        build();
+
+      const hospitalEvents = new Subject<HospitalEvent>();
+
+      hub.on("HospitalEvent", (event: HospitalEvent) => {
+        hospitalEvents.next(event);
+      });
+
+      return new Observable<HospitalEvent>((observer) => {
+        const subscription = hospitalEvents.subscribe(observer);
+
+        hub.start();
+
+        return () => {
+          subscription.unsubscribe();
+          hub.stop();
+        };
+      });
     }
   };
 }
