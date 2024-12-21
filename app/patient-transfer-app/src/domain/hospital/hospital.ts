@@ -36,8 +36,10 @@ export interface Speciality {
   readonly name: string;
 }
 
+export type RoomId = string;
+
 export interface Room {
-  readonly id: string;
+  readonly id: RoomId;
   readonly beds: Bed[];
 }
 

@@ -1,4 +1,4 @@
-import {PersonId} from "./hospital.ts";
+import {PersonId} from "../hospital";
 
 export type Token = string;
 
@@ -13,3 +13,7 @@ export interface AuthenticatedUser {
 }
 
 export type User = Guest | AuthenticatedUser;
+
+export function createGuestUser (): Guest {
+  return {kind: "guest"};
+}
