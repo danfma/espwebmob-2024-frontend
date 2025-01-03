@@ -1,0 +1,20 @@
+services:
+    frontend:
+        image: patient-transfer-frontend-dev
+        build:
+            context: .
+            dockerfile: frontend/patient-transfer-app/Dockerfile.watch
+        volumes:
+            - ./frontend:/frontend/
+        ports:
+            - 8080:8080
+
+    backend:
+        image: patient-transfer-backend-dev
+        build:
+            context: .
+            dockerfile: backend/PatientTransfer.Server/Dockerfile.watch
+        volumes:
+            - ./backend:/backend/
+        ports:
+            - 8000:8000

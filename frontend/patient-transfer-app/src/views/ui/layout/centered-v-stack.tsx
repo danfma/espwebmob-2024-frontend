@@ -9,7 +9,7 @@ export function CenteredVStack (props: CenteredVStackProps) {
   const {children} = props;
 
   return (
-    <VStack w="100vw" h="100vh" justifyContent="center" bg="primary">
+    <VStack w="100vw" h="100vh" justifyContent="center" bg="gray.solid">
       {children}
     </VStack>
   );

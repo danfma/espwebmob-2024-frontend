@@ -3,12 +3,13 @@ import "./index.css";
 import {createAuthService} from "@app/domain/auth";
 import {createHospitalService} from "@app/domain/hospital";
 import {createHospitalOverviewStore, createUserStore} from "@app/stores";
-import {App} from "@app/views/app.tsx";
 import {DomainServicesProvider, HospitalOverviewProvider, UserStoreProvider} from "@app/views/contexts";
 import {ChakraProvider, defaultSystem, Theme} from "@chakra-ui/react";
 import {StrictMode} from "react";
 import {createRoot} from "react-dom/client";
 import {BrowserRouter} from "react-router";
+
+import {App} from "./app.tsx";
 
 // Create domain services
 const domainServices = {
@@ -28,7 +29,7 @@ createRoot(container).render(
         <UserStoreProvider value={userStore}>
           <HospitalOverviewProvider value={hospitalOverviewStore}>
             <ChakraProvider value={defaultSystem}>
-              <Theme appearance="light" colorPalette="blue">
+              <Theme>
                 <App />
               </Theme>
             </ChakraProvider>

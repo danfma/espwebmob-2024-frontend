@@ -15,3 +15,4 @@ export function useLoginStore () {
     [authService, userStore, hospitalOverviewStore]
   );
 }
+

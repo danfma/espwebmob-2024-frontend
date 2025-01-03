@@ -4,9 +4,7 @@ import {ChangeEvent, FormEvent, useCallback} from "react";
 export interface LoginFormProps {
   username: string;
   password: string;
-  // eslint-disable-next-line no-unused-vars
   onUsernameChange?: (username: string) => void;
-  // eslint-disable-next-line no-unused-vars
   onPasswordChange?: (password: string) => void;
   onSubmit?: () => void;
   onCancel?: () => void;
@@ -39,7 +37,7 @@ export function LoginForm (props: LoginFormProps) {
         <Card.Header>
           <Card.Title>Autenticação</Card.Title>
           <Card.Description>
-            Entre com seus dados de acesso
+            Entre com seus dados de acesso:
           </Card.Description>
         </Card.Header>
         <Card.Body>

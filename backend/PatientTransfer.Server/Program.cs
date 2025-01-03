@@ -1,5 +1,7 @@
+using Carter;
 using PatientTransfer.Server.Data;
 using PatientTransfer.Server.Hubs;
+using PatientTransfer.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<AuthService>();
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
@@ -16,18 +20,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-app.MapPost(
-    "/api/auth",
-    (AuthByPassword data) =>
-    {
-        if (data.Username != "doctor-a" || data.Password != "password")
-            return Results.Unauthorized();
-
-        return Results.Ok(new AuthenticatedUser("doctor-a", "hospital-a", "jwt-token"));
-    }
-);
+//app.UseHttpsRedirection();
 
 app.MapGet(
     "/api/hospital/{id}",
@@ -70,6 +63,7 @@ app.MapGet(
     }
 );
 
+app.MapCarter();
 app.MapHub<HospitalHub>("/api/hubs/hospital/{id}");
 
 app.Run();

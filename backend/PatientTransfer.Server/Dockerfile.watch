@@ -1,0 +1,3 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0-noble
+WORKDIR /backend/PatientTransfer.Server/
+ENTRYPOINT dotnet watch --no-hot-reload --non-interactive
