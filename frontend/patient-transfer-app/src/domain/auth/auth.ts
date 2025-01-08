@@ -1,4 +1,4 @@
-import {HospitalId, PersonId} from "../hospital";
+import {DoctorId, HospitalId, PersonId} from "../hospital";
 
 export type Token = string;
 
@@ -10,6 +10,7 @@ export interface AuthenticatedUser {
   readonly kind: "User";
   readonly personId: PersonId;
   readonly hospitalId: HospitalId;
+  readonly doctorId?: DoctorId;
   readonly accessToken: Token;
 }
 

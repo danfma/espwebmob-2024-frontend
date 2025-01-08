@@ -1,5 +1,6 @@
 import "./index.css";
 
+import {createPatientTransferClient} from "@app/api";
 import {createAuthService} from "@app/domain/auth";
 import {createHospitalService} from "@app/domain/hospital";
 import {createHospitalOverviewStore, createUserStore} from "@app/stores";
@@ -11,10 +12,12 @@ import {BrowserRouter} from "react-router";
 
 import {App} from "./app.tsx";
 
+const client = createPatientTransferClient();
+
 // Create domain services
 const domainServices = {
-  authService: createAuthService(),
-  hospitalService: createHospitalService()
+  authService: createAuthService(client),
+  hospitalService: createHospitalService(client)
 };
 
 const userStore = createUserStore();

@@ -1,10 +1,16 @@
+import {HospitalData, PersonData} from "@app/api";
 
 export type HospitalId = string;
+
+export type Point = {
+  type: "Point";
+  coordinates: [number, number];
+};
 
 export interface Hospital {
   readonly id: HospitalId;
   readonly name: string;
-  readonly location: [number, number];
+  readonly location: Point;
   readonly rooms: Room[];
   readonly doctors: Doctor[];
   readonly regulatorId: DoctorId;
@@ -15,24 +21,21 @@ export type PersonType = "doctor" | "regulator" | "patient";
 
 export interface Person {
   readonly id: PersonId;
-  readonly kind: PersonType;
+  readonly name: string;
+  readonly cpf: string;
 }
 
 export type DoctorId = PersonId;
 export type Crm = string;
 
-export interface Doctor extends Person {
+export interface Doctor {
   readonly id: DoctorId;
-  readonly name: string;
+  readonly person: Person;
   readonly crm: Crm;
-  readonly specialty: Speciality;
-  readonly kind: "doctor" | "regulator";
+  readonly specialties: Speciality[];
 }
 
-export type SpecialityId = string;
-
 export interface Speciality {
-  readonly id: SpecialityId;
   readonly name: string;
 }
 
@@ -47,12 +50,11 @@ export interface Bed {
   readonly patient: Patient | null;
 }
 
-export interface Patient extends Person {
-  readonly name: string;
-  readonly age: number;
-  readonly cpf: Cpf;
-  readonly responsible: DoctorId;
-  readonly kind: "patient";
+export type PatientId = string;
+
+export interface Patient {
+  readonly id: PatientId;
+  readonly person: PersonData;
 }
 
 export interface Cpf {
@@ -63,9 +65,21 @@ export function createEmptyHospital (): Hospital {
   return {
     id: "",
     name: "None",
-    location: [0, 0],
+    location: {
+      type: "Point",
+      coordinates: [0, 0]
+    },
     rooms: [],
     doctors: [],
     regulatorId: ""
   };
+}
+
+export namespace HospitalConverter {
+  export function fromData (data: HospitalData): Hospital {
+    return {
+      ...data,
+      location: data.location as Point
+    };
+  }
 }

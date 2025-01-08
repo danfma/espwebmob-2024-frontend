@@ -1,120 +1,54 @@
+import {PatientTransferClient} from "@app/api";
 import {HubConnectionBuilder} from "@microsoft/signalr";
 import {Observable, Subject} from "rxjs";
 
-import {Doctor, Hospital, HospitalId} from "./hospital.ts";
+import {Hospital, HospitalConverter} from "./hospital.ts";
 import {HospitalEvent} from "./hospital-events.ts";
 
-/* eslint-disable no-unused-vars */
+
 export interface HospitalService {
   setAuthorizationToken(token: string): void;
-  load(id: HospitalId): Promise<Hospital>;
-  listen(id: HospitalId): Observable<HospitalEvent>;
+  load(): Promise<Hospital>;
+  listen(): Observable<HospitalEvent>;
 }
 
-export function createClientOnlyHospitalService (): HospitalService {
+export function createHospitalService (client: PatientTransferClient): HospitalService {
   return {
     setAuthorizationToken (token: string) {
-      console.log("Setting authorization token", token);
+      client.auth.setAuthorizationToken(token);
     },
 
-    async load (id: HospitalId) {
-      const doctorA: Doctor = {
-        id: "doctor-a",
-        name: "Doctor A",
-        crm: "123456",
-        specialty: {
-          id: "speciality-a",
-          name: "Speciality A"
-        },
-        kind: "doctor"
-      };
+    async load () {
+      const data = await client.user.loadHospital();
 
-      return {
-        id: id,
-        name: "Hospital A",
-        location: [0, 0],
-        regulatorId: doctorA.id,
-        doctors: [doctorA],
-        rooms: [
-          {
-            id: "room-a",
-            beds: [
-              {
-                patient: {
-                  id: "patient-a",
-                  name: "Patient A",
-                  age: 30,
-                  cpf: {
-                    value: "123.456.789-00"
-                  },
-                  responsible: doctorA.id,
-                  kind: "patient"
-                }
-              }
-            ]
-          },
-          {
-            id: "room-b",
-            beds: [
-              {
-                patient: null
-              }
-            ]
-          }
-        ]
-      };
+      return HospitalConverter.fromData(data);
     },
 
-    listen (_: HospitalId) {
-      return new Subject<HospitalEvent>();
-    }
-  };
-}
-
-export function createHospitalService (url: string = "/api/hospital") {
-  let cachedToken: string | null = null;
-
-  return {
-    setAuthorizationToken (token: string) {
-      cachedToken = token;
-    },
-
-    async load (id: HospitalId) {
-      const response = await fetch(`${url}/${id}`, {
-        method: "GET",
-        headers: cachedToken
-          ? {
-            Authorization: `Bearer ${cachedToken}`
-          }
-          : {}
-      });
-
-      if (response.status !== 200) {
-        throw new Error("Failed to load hospital");
-      }
-
-      return response.json();
-    },
-
-    listen (id: HospitalId) {
+    listen () {
       const hub = new HubConnectionBuilder().
-        withUrl(`/api/hubs/hospital/${id}`).
+        withUrl("/api/hubs/hospital", {
+          headers: {
+            Authorization: client.auth.getAuthorizationToken() ?? ""
+          }
+        }).
+        withAutomaticReconnect().
         build();
 
       const hospitalEvents = new Subject<HospitalEvent>();
 
-      hub.on("HospitalEvent", (event: HospitalEvent) => {
+      hub.on("HospitalLoaded", (event: HospitalEvent) => {
+        console.log(event);
         hospitalEvents.next(event);
       });
 
       return new Observable<HospitalEvent>((observer) => {
         const subscription = hospitalEvents.subscribe(observer);
 
-        hub.start();
+        hub.start().catch(console.error);
 
         return () => {
           subscription.unsubscribe();
-          hub.stop();
+          hub.stop().catch(console.error);
         };
       });
     }

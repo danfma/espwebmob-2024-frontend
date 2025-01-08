@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientTransfer.Server", "PatientTransfer.Server\PatientTransfer.Server.csproj", "{8EDDC20E-C119-45E7-8F1C-9519D8EF0664}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenServerContracts", "GenServerContracts\GenServerContracts.csproj", "{6EB2F34F-556A-46D9-A1FB-E5B2B926FC59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientTransfer.Test", "PatientTransfer.Test\PatientTransfer.Test.csproj", "{43693ED0-E82F-4AAD-90F8-F973582BE23E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{8EDDC20E-C119-45E7-8F1C-9519D8EF0664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDDC20E-C119-45E7-8F1C-9519D8EF0664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDDC20E-C119-45E7-8F1C-9519D8EF0664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EB2F34F-556A-46D9-A1FB-E5B2B926FC59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EB2F34F-556A-46D9-A1FB-E5B2B926FC59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EB2F34F-556A-46D9-A1FB-E5B2B926FC59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EB2F34F-556A-46D9-A1FB-E5B2B926FC59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43693ED0-E82F-4AAD-90F8-F973582BE23E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43693ED0-E82F-4AAD-90F8-F973582BE23E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43693ED0-E82F-4AAD-90F8-F973582BE23E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43693ED0-E82F-4AAD-90F8-F973582BE23E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

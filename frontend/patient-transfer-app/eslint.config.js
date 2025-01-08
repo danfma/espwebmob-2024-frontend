@@ -7,7 +7,10 @@ import globals from "globals";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
+  {
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    ignores: ["system-design/**/*.*", "src/api/contracts/**/*.*"]
+  },
   {languageOptions: {globals: globals.browser}},
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,

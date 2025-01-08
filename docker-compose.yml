@@ -6,6 +6,7 @@ services:
             dockerfile: frontend/patient-transfer-app/Dockerfile.watch
         volumes:
             - ./frontend:/frontend/
+            - frontend-tmp:/frontend/patient-transfer-app/node_modules
         ports:
             - 8080:8080
 
@@ -16,5 +17,24 @@ services:
             dockerfile: backend/PatientTransfer.Server/Dockerfile.watch
         volumes:
             - ./backend:/backend/
+            - backend-tmp-bin:/backend/PatientTransfer.Server/bin
+            - backend-tmp-obj:/backend/PatientTransfer.Server/obj
         ports:
             - 8000:8000
+
+volumes:
+    frontend-tmp:
+        driver: local
+        driver_opts:
+            type: tmpfs
+            device: tmpfs
+    backend-tmp-bin:
+        driver: local
+        driver_opts:
+            type: tmpfs
+            device: tmpfs
+    backend-tmp-obj:
+        driver: local
+        driver_opts:
+            type: tmpfs
+            device: tmpfs

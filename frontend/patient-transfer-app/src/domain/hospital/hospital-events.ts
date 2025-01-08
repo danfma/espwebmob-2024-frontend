@@ -1,4 +1,10 @@
 import {DoctorId, Hospital, Patient, RoomId} from "./hospital.ts";
+
+export interface HospitalLoaded {
+  readonly kind: "HospitalLoaded";
+  readonly hospital: Hospital;
+}
+
 export interface RegulatorChanged {
   readonly kind: "RegulatorChanged";
   readonly regulatorId: DoctorId;

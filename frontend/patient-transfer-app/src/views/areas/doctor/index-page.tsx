@@ -1,6 +1,8 @@
 
 export function IndexPage () {
   return (
-    <div></div>
+    <div>
+      <strong>Doctor's area</strong>
+    </div>
   );
 }
