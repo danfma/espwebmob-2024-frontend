@@ -1,15 +1,13 @@
-import {PatientTransferClient} from "@app/api";
-import {HubConnectionBuilder} from "@microsoft/signalr";
-import {Observable, Subject} from "rxjs";
+import {HospitalHubEvent, PatientTransferClient} from "@app/api";
+import {Observable} from "rxjs";
 
 import {Hospital, HospitalConverter} from "./hospital.ts";
-import {HospitalEvent} from "./hospital-events.ts";
 
 
 export interface HospitalService {
   setAuthorizationToken(token: string): void;
   load(): Promise<Hospital>;
-  listen(): Observable<HospitalEvent>;
+  listen(): Observable<HospitalHubEvent>;
 }
 
 export function createHospitalService (client: PatientTransferClient): HospitalService {
@@ -25,32 +23,7 @@ export function createHospitalService (client: PatientTransferClient): HospitalS
     },
 
     listen () {
-      const hub = new HubConnectionBuilder().
-        withUrl("/api/hubs/hospital", {
-          headers: {
-            Authorization: client.auth.getAuthorizationToken() ?? ""
-          }
-        }).
-        withAutomaticReconnect().
-        build();
-
-      const hospitalEvents = new Subject<HospitalEvent>();
-
-      hub.on("HospitalLoaded", (event: HospitalEvent) => {
-        console.log(event);
-        hospitalEvents.next(event);
-      });
-
-      return new Observable<HospitalEvent>((observer) => {
-        const subscription = hospitalEvents.subscribe(observer);
-
-        hub.start().catch(console.error);
-
-        return () => {
-          subscription.unsubscribe();
-          hub.stop().catch(console.error);
-        };
-      });
+      return client.hubs.hospital();
     }
   };
 }

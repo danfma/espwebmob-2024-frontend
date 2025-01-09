@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using PatientTransfer.Server.Data;
 using PatientTransfer.Server.Domain.Accounts;
@@ -8,38 +10,42 @@ using PatientTransfer.Server.Services.Persistence;
 
 namespace PatientTransfer.Server.Hubs;
 
-public class HospitalHub(EntityStore store) : Hub<IHospitalReceiver>
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class HospitalHub(EntityStore store, ILogger<HospitalHub> logger) : Hub<IHospitalReceiver>
 {
     private Hospital Hospital
     {
         get =>
-            Context.Items["hospital"] as Hospital
+            Context.Items[nameof(Hospital)] as Hospital
             ?? throw new InvalidOperationException("No hospital in context.");
-        set => Context.Items["hospital"] = value;
+        set => Context.Items[nameof(Hospital)] = value;
     }
 
     public Doctor? Doctor
     {
-        get => Context.Items["doctor"] as Doctor;
-        set => Context.Items["doctor"] = value;
+        get => Context.Items[nameof(Doctor)] as Doctor;
+        set => Context.Items[nameof(Doctor)] = value;
     }
 
     public UserAccount UserAccount
     {
         get =>
-            Context.Items["userAccount"] as UserAccount
+            Context.Items[nameof(UserAccount)] as UserAccount
             ?? throw new InvalidOperationException("No user account in context.");
-        set => Context.Items["userAccount"] = value;
+        set => Context.Items[nameof(UserAccount)] = value;
     }
 
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         var user = Context.User;
 
         if (user is null)
         {
+            logger.LogWarning("Aborting connection due to null user.");
+
             Context.Abort();
-            return Task.CompletedTask;
+            await base.OnConnectedAsync();
+            return;
         }
 
         var personId = user
@@ -56,8 +62,21 @@ public class HospitalHub(EntityStore store) : Hub<IHospitalReceiver>
         Doctor = store.Doctors.FirstOrDefault(x => x.Id == doctorId);
         UserAccount = store.UserAccounts.First(x => x.Person.Id == personId);
 
-        Clients.Caller.HospitalLoaded(Hospital.ExportAsData());
+        logger.LogInformation(
+            "{Username} connected to {HospitalName}",
+            UserAccount.Username,
+            Hospital.Name
+        );
 
-        return Task.CompletedTask;
+        await base.OnConnectedAsync();
+    }
+
+    public async Task Watch()
+    {
+        logger.LogInformation("Received watch request from {Username}", UserAccount.Username);
+
+        await Clients.Caller.HospitalLoaded(Hospital.ExportAsData());
+
+        logger.LogInformation("Response data sent...");
     }
 }

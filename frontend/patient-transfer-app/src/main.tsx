@@ -12,7 +12,7 @@ import {BrowserRouter} from "react-router";
 
 import {App} from "./app.tsx";
 
-const client = createPatientTransferClient();
+const client = createPatientTransferClient("http://localhost:8000");
 
 // Create domain services
 const domainServices = {

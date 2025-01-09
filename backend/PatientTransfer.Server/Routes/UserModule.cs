@@ -15,6 +15,7 @@ public sealed class UserModule : ICarterModule
 
         group
             .MapGet("/hospital", GetHospital)
+            .RequireAuthorization()
             .Produces<Hospital>()
             .ProducesValidationProblem(StatusCodes.Status401Unauthorized);
     }

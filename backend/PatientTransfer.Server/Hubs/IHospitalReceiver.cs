@@ -4,5 +4,5 @@ namespace PatientTransfer.Server.Hubs;
 
 public interface IHospitalReceiver
 {
-    void HospitalLoaded(HospitalData data);
+    Task HospitalLoaded(HospitalData data);
 }
